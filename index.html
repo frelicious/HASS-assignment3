@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+
+.tooltip {
+    position:absolute;
+    background-color: rgba(255,255,255, 0.9);
+    width: 200px;
+    height: auto;
+    text-align:center;
+    margin-top:15px;
+
+}
+
+#legend {
+    position: relative;
+    
+    text-align: center;
+    background-color: rgba(255,255,255, 0.3);
+    font-size: 15px; 
+    font-family: 'Raleway',sans-serif;
+    line-height: 1.25;  
+    width: 400px;
+    height:250px;
+    margin-left: 900px;
+    margin-top:-380px;
+    
+}
+
+body {
+    background: lightcyan;
+} 
+
+#titlelegend {
+    text-align:center;
+    position: absolute;
+    margin-left: 950px;
+    margin-top:-200px; 
+    font-size: 18px; 
+    font-weight: bold;
+    z-index:+1;
+    color:grey;
+}
+h1, div {
+    font-family: 'Raleway',sans-serif;
+    line-height: 1.25;  
+    text-align:center;
+}
+#credits {
+    font-size:20px;
+}
+
+  </style>
+</head>
+<body>
+<h1>A choropleth map visualization of the 2020 population in Singapore subdistricts</h1>
+<div id="credits">Data from <a href="www.data.gov.sg">data.gov.sg</a>, cleaned by <a href="https://chi-loong.github.io/HASS02.526/assignments/population2020.csv">Chi-Loong</a>.</div>
+
+
+
+<svg id="districts"></svg>
+<div class="tooltip"></div>
+<div id="titlelegend">LEGEND (Based on IQR)</div>
+<svg id="legend"></svg>
+
+<script src="https://d3js.org/d3.v6.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.24.0/d3-legend.js"></script>
+<script>
+
+let width = 1000, height = 600;
+
+let svg = d3.select("svg")
+    .attr("viewBox", "0 0 " + width + " " + height)
+// let map_legend= d3.select("map_legend")
+//     .attr("viewBox", "0 0 " + 400 + " " + 700)
+
+// Load external data and boot
+Promise.all([d3.json("sgmap.json"), d3.csv("population2020.csv")]).then(data => {
+     let sgmap = data[0]
+     let population2020 = data[1]
+//console.log(data[0]);
+//console.log(data[1]);
+
+// Map and projection
+var projection = d3.geoMercator()
+    .center([103.851959, 1.290270])
+    .fitExtent([[20, 20], [980, 580]], data[0]);
+
+let geopath = d3.geoPath().projection(projection);
+
+//color
+var colorScale = d3.scaleThreshold()
+  .domain([0, 1495,5890, 15165, 134210])
+  .range(d3.schemeBrBG[4]);
+
+//for loop to bind population to values
+
+for(i=0; i<population2020.length; i++){
+          // grab subzone name
+          var dataSubz = population2020[i].subzone;
+
+          //grab data value, and convert from string to float
+          var dataValue = parseFloat(population2020[i].Population);
+
+          //find the corresponding state inside the GeoJSON
+          for(var n = 0; n < sgmap.features.length; n++){
+
+            // properties name gets the states name
+            var jsonSubz = sgmap.features[n].properties.Name;
+            // if statment to merge by name of state
+            if(dataSubz == jsonSubz){
+              //Copy the data value into the JSON
+              // basically creating a new value column in JSON data
+              sgmap.features[n].properties.value = dataValue;
+
+              //stop looking through the JSON
+              break;
+            }
+            
+          }
+        }
+  
+//console.log(sgmap.features[0].properties.value);
+
+
+
+svg.append("g")
+    .attr("id", "districts")
+    .selectAll("path")
+    .data(sgmap.features)
+    .enter()
+    .append("path")
+    .attr("d", geopath)
+    .on("mouseover", (event, d) => {
+    if (d.properties.value >0){
+    d3.select(".tooltip")
+    .text(d.properties.Name +": "+ d.properties.value)
+    .style("left", (event.pageX) + "px")
+    .style("top", (event.pageY) + "px") }
+    else {
+        d3.select(".tooltip")
+    .text(d.properties.Name +": "+ "undefined")
+    .style("left", (event.pageX) + "px")
+    .style("top", (event.pageY) + "px") }
+    }
+    )
+    .attr("fill", d=> {
+        return colorScale(d.properties.value);
+    })
+var labels = ['0 - 1495 (Low)', '1496 - 5890 (Moderate)', '5891 - 15165 (High)', '15166 - 134210 (Very High)'];
+    //legend
+
+    var map_legend = d3.select("#legend")
+    var color = d3.scaleOrdinal()
+    .domain(labels)
+     .range(d3.schemeBrBG[4]);
+     var size = 20
+map_legend.selectAll("mydots")
+  .data(labels)
+  .enter()
+  .append("rect")
+    .attr("x", 100)
+    .attr("y", function(d,i){ return 100 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
+    .attr("width", size)
+    .attr("height", size)
+    .style("fill", function(d){ return color(d)})
+
+map_legend.selectAll("mylabels")
+  .data(labels)
+  .enter()
+  .append("text")
+    .attr("x", 100 + size*1.2)
+    .attr("y", function(d,i){ return 100 + i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
+    .style("fill", function(d){ return color(d)})
+    .text(function(d){ return d})
+    .attr("text-anchor", "left")
+    .style("alignment-baseline", "middle")
+
+})
+
+        
+
+</script>
+
+</body>
+</html>
