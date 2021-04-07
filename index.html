@@ -94,7 +94,7 @@ let geopath = d3.geoPath().projection(projection);
 //color
 var colorScale = d3.scaleThreshold()
   .domain([1495,5890, 11050, 15165, 134210])
-  .range(d3.schemeBrBG[5]);
+  .range(d3.schemePurples[5]);
 
 //for loop to bind population to values
 
@@ -157,7 +157,7 @@ var labels = ['0 - 1495 (Very Low)', '1496 - 5890 (Low)', '5891 - 11050 (Moderat
     var map_legend = d3.select("#legend")
     var color = d3.scaleOrdinal()
     .domain(labels)
-     .range(d3.schemeBrBG[5]);
+     .range(d3.schemePurples[5]);
      var size = 20
 map_legend.selectAll("mydots")
   .data(labels)
