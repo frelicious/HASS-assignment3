@@ -93,8 +93,8 @@ let geopath = d3.geoPath().projection(projection);
 
 //color
 var colorScale = d3.scaleThreshold()
-  .domain([0, 1495,5890, 15165, 134210])
-  .range(d3.schemeBrBG[4]);
+  .domain([0, 1495,5890, 11050, 15165, 134210])
+  .range(d3.schemeBrBG[5]);
 
 //for loop to bind population to values
 
@@ -150,7 +150,8 @@ svg.append("g")
     .attr("fill", d=> {
         return colorScale(d.properties.value);
     })
-var labels = ['0 - 1495 (Low)', '1496 - 5890 (Moderate)', '5891 - 15165 (High)', '15166 - 134210 (Very High)'];
+var labels = ['0 - 1495 (Very Low)', '1496 - 5890 (Low)', '5891 - 11050 (Moderate)', '11051 - 15165 (High)', '15166 - 134210 (Very High)'];
+
     //legend
 
     var map_legend = d3.select("#legend")
