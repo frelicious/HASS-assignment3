@@ -145,15 +145,22 @@ svg.append("g")
     if (d.properties.value >0){
     d3.select(".tooltip")
     .text(d.properties.Name +": "+ d.properties.value)
-    .style("left", (event.pageX) + "px")
-    .style("top", (event.pageY) + "px");
-     svg.append("g").style("stroke","#a7eec9");
+    .style("left", (event.pageX+15) + "px")
+    .style("top", (event.pageY+15) + "px");
+    svg.append("g")
+    .attr("id", "districts")
+    .selectAll("path")
+    .data(sgmap.features)
+    .enter()
+    .append("path")
+    .attr("d", geopath)
+    .attr("fill","#fff");
     }
     else {
         d3.select(".tooltip")
     .text(d.properties.Name +": "+ "undefined")
-    .style("left", (event.pageX) + "px")
-    .style("top", (event.pageY) + "px") }
+    .style("left", (event.pageX+15) + "px")
+    .style("top", (event.pageY+15) + "px") }
     }
     )
     .attr("fill", d=> {
