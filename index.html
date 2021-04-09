@@ -159,7 +159,11 @@ svg.append("g")
         return colorScale(d.properties.value);
     })
     .on("mouseout", (event,d)=> {
-  d3.select(".tooltip").style("opacity",0); })
+  d3.select(".tooltip")
+        .text("");
+        d3.select(svg.selectAll("path")
+        .attr("opacity", 1));
+        d3.select(event.currentTarget) })
   
 var labels = ['0 - 1495 (Very Low)', '1496 - 5890 (Low)', '5891 - 11050 (Moderate)', '11051 - 15165 (High)', '15166 - 134210 (Very High)'];
 
