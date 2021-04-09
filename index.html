@@ -159,6 +159,9 @@ svg.append("g")
     .attr("fill", d=> {
         return colorScale(d.properties.value);
     })
+    .on("mouseout", (event,d)=> {
+  d3.select(".tooltip").style("opacity",0); })
+  
 var labels = ['0 - 1495 (Very Low)', '1496 - 5890 (Low)', '5891 - 11050 (Moderate)', '11051 - 15165 (High)', '15166 - 134210 (Very High)'];
 
     //legend
