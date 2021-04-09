@@ -148,7 +148,7 @@ svg.append("g")
     .text(d.properties.Name +": "+ d.properties.value)
     .style("left", (event.pageX+15) + "px")
     .style("top", (event.pageY+15) + "px");
-      d3.select("path").append("path").attr(event.geopath).style("stroke","#fff");
+      d3.select("#districts").append("path").style("stroke","#fff");
      
     }
     else {
