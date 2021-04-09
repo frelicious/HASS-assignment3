@@ -146,7 +146,8 @@ svg.append("g")
     d3.select(".tooltip")
     .text(d.properties.Name +": "+ d.properties.value)
     .style("left", (event.pageX) + "px")
-    .style("top", (event.pageY) + "px") }
+    .style("top", (event.pageY) + "px")
+    .attr("stroke", "#fff")}
     else {
         d3.select(".tooltip")
     .text(d.properties.Name +": "+ "undefined")
