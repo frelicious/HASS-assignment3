@@ -146,8 +146,9 @@ svg.append("g")
     d3.select(".tooltip")
     .text(d.properties.Name +": "+ d.properties.value)
     .style("left", (event.pageX) + "px")
-    .style("top", (event.pageY) + "px")
-    .attr("fill","#a7eec9")}
+    .style("top", (event.pageY) + "px");
+     svg.append("g").style("stroke","#a7eec9");
+    }
     else {
         d3.select(".tooltip")
     .text(d.properties.Name +": "+ "undefined")
