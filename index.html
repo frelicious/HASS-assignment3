@@ -147,14 +147,6 @@ svg.append("g")
     .text(d.properties.Name +": "+ d.properties.value)
     .style("left", (event.pageX+15) + "px")
     .style("top", (event.pageY+15) + "px");
-    svg.append("g")
-    .attr("id", "districts")
-    .selectAll("path")
-    .data(sgmap.features)
-    .enter()
-    .append("path")
-    .attr("d", geopath)
-    .attr("fill","#fff");
     }
     else {
         d3.select(".tooltip")
